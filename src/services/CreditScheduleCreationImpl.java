@@ -9,11 +9,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CreditScheduleCreationImpl implements ICreditScheduleCreation {
     private final IPrintingService printingService;
     private final IInterestSummary interestSummary;
     private final List<CreditSchedule> ratesSchedule = new ArrayList<>();
+
 
     public CreditScheduleCreationImpl(IPrintingService printingService, IInterestSummary interestSummary) {
         this.interestSummary = interestSummary;
@@ -33,14 +35,20 @@ public class CreditScheduleCreationImpl implements ICreditScheduleCreation {
 
         for (int i = 0; i < inputData.getCreditDuration().intValue(); i++) {
 
-            Rate rate = rateAmountCalculation.rate(inputData, creditCapitalResidual);
+            Rate rate = rateAmountCalculation.rate(inputData, creditCapitalResidual, creditMonthsResidual);
             rateNumber = rateNumber.add(BigDecimal.ONE);
             rateDate = rateDate.plusMonths(1);
             creditCapitalResidual = creditCapitalResidual.subtract(rate.getCapitalAmount());
             creditMonthsResidual = creditMonthsResidual.subtract(BigDecimal.ONE);
 
+            ///// TU JEST LAMBDA DOTYCZĄCA NADPŁaTY
+            BigDecimal overpaymentAmount =
+                    overpaymentCalculation.creditOverpaymentCalculation(inputData.getOverpayments(), rateNumber, creditCapitalResidual);
+
+            creditCapitalResidual = creditCapitalResidual.subtract(overpaymentAmount);
+
             CreditSchedule rateDetails = buildRate(rateNumber, rateDate, rate.getRateAmount(),
-                    rate.getCapitalAmount(), rate.getInterestAmount(),
+                    rate.getCapitalAmount(), rate.getInterestAmount(), overpaymentAmount,
                     creditCapitalResidual, creditMonthsResidual);
             ratesSchedule.add(rateDetails);
 
@@ -51,11 +59,20 @@ public class CreditScheduleCreationImpl implements ICreditScheduleCreation {
         return ratesSchedule;
     }
 
+    ICreditOverpaymentCalculation overpaymentCalculation =
+            (Map<Integer, BigDecimal> inputData, BigDecimal rateNumber, BigDecimal creditCapitalResidual) -> {
+        for (Map.Entry<Integer, BigDecimal> overpaymentDetails : inputData.entrySet()) {
+            if(rateNumber.equals(BigDecimal.valueOf(overpaymentDetails.getKey()))){
+                return overpaymentDetails.getValue();
+            }
+        }
+        return BigDecimal.ZERO;
+    };
     private CreditSchedule buildRate(
             BigDecimal rateNumber, LocalDate rateDate, BigDecimal rateAmount,
-            BigDecimal capitalAmount, BigDecimal interestAmount, BigDecimal creditCapitalResidual, BigDecimal creditMonthsResidual) {
+            BigDecimal capitalAmount, BigDecimal interestAmount, BigDecimal overpaymentAmount, BigDecimal creditCapitalResidual, BigDecimal creditMonthsResidual) {
 
-        return new CreditSchedule(rateNumber, rateDate, rateAmount, capitalAmount, interestAmount,
+        return new CreditSchedule(rateNumber, rateDate, rateAmount, capitalAmount, interestAmount, overpaymentAmount,
                 creditCapitalResidual, creditMonthsResidual);
     }
 }

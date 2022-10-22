@@ -3,14 +3,26 @@ package model;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InputData {
     private BigDecimal creditAmount = BigDecimal.valueOf(550000);
     private LocalDate creditDisbursementDate = LocalDate.of(2022, 10, 1);
     private BigDecimal percentAmount = BigDecimal.valueOf(3.63);
     private BigDecimal percentAmountToCalculate;
-    private final RateType rateType = RateType.CONSTANT;
+    private final RateType rateType = RateType.DECREASING;
     private BigDecimal creditDuration = BigDecimal.valueOf(360);
+    private Map<Integer, BigDecimal> overpayments = Map.of(
+            2, BigDecimal.valueOf(5000),
+            3, BigDecimal.valueOf(5000)
+    );
+
+
+//    public InputData withOverpayments Map<BigDecimal, BigDecimal> {
+//        this.overpayments = overpayments;
+//        return this;
+//    }
 
     public InputData withCreditAmount(BigDecimal creditAmount) {
         this.creditAmount = creditAmount;
@@ -55,5 +67,9 @@ public class InputData {
 
     public RateType getRateType() {
         return rateType;
+    }
+
+    public Map<Integer, BigDecimal> getOverpayments() {
+        return overpayments;
     }
 }
