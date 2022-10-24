@@ -1,11 +1,9 @@
 package services;
 
-import model.CreditSchedule;
-import model.InputData;
-import model.InterestSummary;
-import model.Rate;
+import model.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,24 +26,36 @@ public class CreditScheduleCreationImpl implements ICreditScheduleCreation {
         printingService.printCreditParameters(inputData);
 
         RateAmountCalculationImpl rateAmountCalculation = new RateAmountCalculationImpl();
+        ReferentialAmounts referentialAmounts = new ReferentialAmounts(inputData.getCreditAmount(), inputData.getCreditDuration());
         LocalDate rateDate = inputData.getCreditDisbursementDate();
         BigDecimal rateNumber = BigDecimal.ZERO;
         BigDecimal creditCapitalResidual = inputData.getCreditAmount();
         BigDecimal creditMonthsResidual = inputData.getCreditDuration();
 
         for (int i = 0; i < inputData.getCreditDuration().intValue(); i++) {
+            if(creditCapitalResidual.compareTo(BigDecimal.ZERO)==0){
+                break;
+            }
 
-            Rate rate = rateAmountCalculation.rate(inputData, creditCapitalResidual, creditMonthsResidual);
+            Rate rate = rateAmountCalculation.rate(inputData, creditCapitalResidual, creditMonthsResidual, referentialAmounts);
             rateNumber = rateNumber.add(BigDecimal.ONE);
             rateDate = rateDate.plusMonths(1);
             creditCapitalResidual = creditCapitalResidual.subtract(rate.getCapitalAmount());
             creditMonthsResidual = creditMonthsResidual.subtract(BigDecimal.ONE);
 
-            ///// TU JEST LAMBDA DOTYCZĄCA NADPŁaTY
+            if(creditCapitalResidual.compareTo(BigDecimal.ZERO)==0){ //To jest do zmiany bo nie wygląda dobrze w harmonogramie
+                creditMonthsResidual = BigDecimal.ZERO;
+            }
+
+            ///// TU JEST WYWOŁANIE LAMBDA DOTYCZĄCA NADPŁATY
             BigDecimal overpaymentAmount =
                     overpaymentCalculation.creditOverpaymentCalculation(inputData.getOverpayments(), rateNumber, creditCapitalResidual);
 
             creditCapitalResidual = creditCapitalResidual.subtract(overpaymentAmount);
+            if(overpaymentAmount.compareTo(BigDecimal.ZERO)>0){
+                referentialAmounts = new ReferentialAmounts(creditCapitalResidual, creditMonthsResidual);
+            }
+
 
             CreditSchedule rateDetails = buildRate(rateNumber, rateDate, rate.getRateAmount(),
                     rate.getCapitalAmount(), rate.getInterestAmount(), overpaymentAmount,
@@ -60,8 +70,8 @@ public class CreditScheduleCreationImpl implements ICreditScheduleCreation {
     }
 
     ICreditOverpaymentCalculation overpaymentCalculation =
-            (Map<Integer, BigDecimal> inputData, BigDecimal rateNumber, BigDecimal creditCapitalResidual) -> {
-        for (Map.Entry<Integer, BigDecimal> overpaymentDetails : inputData.entrySet()) {
+            (Map<Integer, BigDecimal> overpayments, BigDecimal rateNumber, BigDecimal creditCapitalResidual) -> {
+        for (Map.Entry<Integer, BigDecimal> overpaymentDetails : overpayments.entrySet()) {
             if(rateNumber.equals(BigDecimal.valueOf(overpaymentDetails.getKey()))){
                 return overpaymentDetails.getValue();
             }

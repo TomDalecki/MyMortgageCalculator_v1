@@ -15,10 +15,5 @@ public class Main {
                 printingService, InterestSummaryCalculation.createSummary());
 
         creditScheduleCreation.creditSchedule(inputData);
-
-
-
-
-
     }
 }

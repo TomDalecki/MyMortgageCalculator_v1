@@ -14,8 +14,8 @@ public class InputData {
     private final RateType rateType = RateType.DECREASING;
     private BigDecimal creditDuration = BigDecimal.valueOf(360);
     private Map<Integer, BigDecimal> overpayments = Map.of(
-            2, BigDecimal.valueOf(5000),
-            3, BigDecimal.valueOf(5000)
+            2, BigDecimal.valueOf(10000),
+            5, BigDecimal.valueOf(10000)
     );
 
 
@@ -36,7 +36,7 @@ public class InputData {
 
     public InputData withPercentAmount(BigDecimal percentAmount) {
         this.percentAmount = percentAmount;
-        percentAmountToCalculate = percentAmount.divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
+        percentAmountToCalculate = percentAmount.divide(BigDecimal.valueOf(100), 5, RoundingMode.HALF_UP);
         return this;
     }
 
