@@ -1,4 +1,6 @@
 import model.InputData;
+import model.OverpaymentType;
+import model.RateType;
 import services.*;
 
 import java.math.BigDecimal;
@@ -8,7 +10,9 @@ public class Main {
         InputData inputData = new InputData()
                 .withCreditAmount(BigDecimal.valueOf(300000))
                 .withCreditDuration(BigDecimal.valueOf(180))
-                .withPercentAmount(BigDecimal.valueOf(6.69));
+                .withPercentAmount(BigDecimal.valueOf(6.69))
+                .withRateType(RateType.CONSTANT)
+                .withOverpaymentType(OverpaymentType.DURATION_DECREASE);
 
         IPrintingService printingService = new PrintingServiceImpl();
         ICreditScheduleCreation creditScheduleCreation = new CreditScheduleCreationImpl(

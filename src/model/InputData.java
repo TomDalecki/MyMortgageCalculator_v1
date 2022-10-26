@@ -3,7 +3,6 @@ package model;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
 
 public class InputData {
@@ -11,26 +10,26 @@ public class InputData {
     private LocalDate creditDisbursementDate = LocalDate.of(2022, 10, 1);
     private BigDecimal percentAmount = BigDecimal.valueOf(3.63);
     private BigDecimal percentAmountToCalculate;
-    private final RateType rateType = RateType.DECREASING;
+    private RateType rateType = RateType.DECREASING;
     private BigDecimal creditDuration = BigDecimal.valueOf(360);
     private Map<Integer, BigDecimal> overpayments = Map.of(
             2, BigDecimal.valueOf(10000),
-            5, BigDecimal.valueOf(10000)
+            5, BigDecimal.valueOf(10000),
+            100, BigDecimal.valueOf(0)
     );
-
-
-//    public InputData withOverpayments Map<BigDecimal, BigDecimal> {
-//        this.overpayments = overpayments;
-//        return this;
-//    }
+    private OverpaymentType overpaymentType = OverpaymentType.RATE_DECREASE;
 
     public InputData withCreditAmount(BigDecimal creditAmount) {
         this.creditAmount = creditAmount;
         return this;
     }
 
-    public InputData withCreditDisbursementDate(LocalDate creditDisbursementDate) {
-        this.creditDisbursementDate = creditDisbursementDate;
+    public InputData withRateType(RateType rateType) {
+        this.rateType = rateType;
+        return this;
+    }
+    public InputData withOverpaymentType(OverpaymentType overpaymentType) {
+        this.overpaymentType = overpaymentType;
         return this;
     }
 
@@ -71,5 +70,9 @@ public class InputData {
 
     public Map<Integer, BigDecimal> getOverpayments() {
         return overpayments;
+    }
+
+    public OverpaymentType getOverpaymentType() {
+        return overpaymentType;
     }
 }
