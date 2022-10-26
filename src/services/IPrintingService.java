@@ -11,7 +11,6 @@ public interface IPrintingService {
     String CAPITAL = "KAPITAŁ: ";
     String INTEREST = "OPROCENTOWANIE: ";
     String DURATION = "OKRES KREDYTOWANIA: ";
-    String RATE_DATE = " DATA RATY: ";
     String CURRENCY = "ZŁ ";
     String PERCENT = "% ";
 

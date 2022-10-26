@@ -6,17 +6,17 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public class InputData {
-    private BigDecimal creditAmount = BigDecimal.valueOf(550000);
-    private LocalDate creditDisbursementDate = LocalDate.of(2022, 10, 1);
+    private final LocalDate creditDisbursementDate = LocalDate.of(2022, 10, 1);
+    private final Map<Integer, BigDecimal> overpayments = Map.of(
+            2, BigDecimal.valueOf(10000),
+            10, BigDecimal.valueOf(10000),
+            100, BigDecimal.valueOf(10000)
+    );
+    private BigDecimal creditAmount = BigDecimal.valueOf(30000);
     private BigDecimal percentAmount = BigDecimal.valueOf(3.63);
     private BigDecimal percentAmountToCalculate;
     private RateType rateType = RateType.DECREASING;
-    private BigDecimal creditDuration = BigDecimal.valueOf(360);
-    private Map<Integer, BigDecimal> overpayments = Map.of(
-            2, BigDecimal.valueOf(10000),
-            5, BigDecimal.valueOf(10000),
-            100, BigDecimal.valueOf(0)
-    );
+    private BigDecimal creditDuration = BigDecimal.valueOf(180);
     private OverpaymentType overpaymentType = OverpaymentType.RATE_DECREASE;
 
     public InputData withCreditAmount(BigDecimal creditAmount) {
@@ -28,6 +28,7 @@ public class InputData {
         this.rateType = rateType;
         return this;
     }
+
     public InputData withOverpaymentType(OverpaymentType overpaymentType) {
         this.overpaymentType = overpaymentType;
         return this;

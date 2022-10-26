@@ -3,11 +3,9 @@ package services;
 import model.*;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class CreditScheduleCreationImpl implements ICreditScheduleCreation {
     private final IPrintingService printingService;
@@ -21,7 +19,7 @@ public class CreditScheduleCreationImpl implements ICreditScheduleCreation {
     }
 
     @Override
-    public List<CreditSchedule> creditSchedule(InputData inputData) {
+    public void creditSchedule(InputData inputData) {
 
         printingService.printCreditParameters(inputData);
 
@@ -33,7 +31,7 @@ public class CreditScheduleCreationImpl implements ICreditScheduleCreation {
         BigDecimal creditMonthsResidual = inputData.getCreditDuration();
 
         for (int i = 0; i < inputData.getCreditDuration().intValue(); i++) {
-            if(creditCapitalResidual.compareTo(BigDecimal.ZERO)==0){
+            if (creditCapitalResidual.compareTo(BigDecimal.ZERO) == 0) {
                 break;
             }
             rateNumber = rateNumber.add(BigDecimal.ONE);
@@ -53,7 +51,6 @@ public class CreditScheduleCreationImpl implements ICreditScheduleCreation {
         InterestSummary interestSum = interestSummary.interestSummaryCalculation(ratesSchedule);
         printingService.printInterestSum(interestSum);
         printingService.printCreditSchedule(ratesSchedule);
-        return ratesSchedule;
     }
 
     private CreditSchedule buildRate(

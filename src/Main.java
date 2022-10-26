@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) {
         InputData inputData = new InputData()
                 .withCreditAmount(BigDecimal.valueOf(300000))
-                .withCreditDuration(BigDecimal.valueOf(180))
+                .withCreditDuration(BigDecimal.valueOf(101))
                 .withPercentAmount(BigDecimal.valueOf(6.69))
                 .withRateType(RateType.CONSTANT)
                 .withOverpaymentType(OverpaymentType.DURATION_DECREASE);

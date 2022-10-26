@@ -5,5 +5,5 @@ import java.util.Map;
 
 @FunctionalInterface
 public interface ICreditOverpaymentCalculation {
-     BigDecimal creditOverpaymentCalculation(Map<Integer, BigDecimal> inputData, BigDecimal rateNumber);
+    BigDecimal creditOverpaymentCalculation(Map<Integer, BigDecimal> inputData, BigDecimal rateNumber);
 }

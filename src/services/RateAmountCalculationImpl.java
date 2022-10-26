@@ -4,11 +4,12 @@ import model.InputData;
 import model.OverpaymentType;
 import model.Rate;
 import model.ReferentialAmounts;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
 
-public class RateAmountCalculationImpl {
+public class RateAmountCalculationImpl implements IRateAmountCalculationImpl {
 
     ICreditOverpaymentCalculation overpaymentCalculation =
             (Map<Integer, BigDecimal> overpayments, BigDecimal rateNumber) -> {
@@ -110,6 +111,7 @@ public class RateAmountCalculationImpl {
         }
         return new Rate(capitalAmount, interestAmount, rateAmount, overpaymentAmount, creditMonthsResidual, referentialAmounts);
     }
+
     private Rate constantRateCalculationWithCreditDurationDecreaseOverpayment(
             InputData inputData, BigDecimal rateNumber, BigDecimal creditCapitalResidual,
             BigDecimal creditMonthsResidual, ReferentialAmounts referentialAmounts) {
@@ -184,10 +186,9 @@ public class RateAmountCalculationImpl {
         double b = inputData.getPercentAmountToCalculate().doubleValue();
         double m = 12;
 
-        BigDecimal creditMonthsResidual = BigDecimal.valueOf(
+        return BigDecimal.valueOf(
                         (Math.log((R / (R - A * (b / m)))))
                                 / (Math.log(1 + (b / m))))
-                                    .setScale(0, RoundingMode.HALF_DOWN);
-        return creditMonthsResidual;
+                .setScale(0, RoundingMode.UP);
     }
 }

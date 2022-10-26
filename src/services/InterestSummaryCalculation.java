@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class InterestSummaryCalculation {
-    public static IInterestSummary createSummary(){
+    public static IInterestSummary createSummary() {
         return ratesSchedule -> {
             BigDecimal interestSum = calculateInterestSum(ratesSchedule);
             return new InterestSummary(interestSum);
@@ -19,6 +19,6 @@ public class InterestSummaryCalculation {
         for (CreditSchedule interestAmount : ratesSchedule) {
             sum = sum.add(interestAmount.getInterestAmount());
         }
-       return sum;
+        return sum;
     }
 }

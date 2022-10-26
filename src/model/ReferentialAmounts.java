@@ -3,8 +3,8 @@ package model;
 import java.math.BigDecimal;
 
 public class ReferentialAmounts {
-    private BigDecimal referentialCapitalAmount;
-    private BigDecimal referentialMonthsDuration;
+    private final BigDecimal referentialCapitalAmount;
+    private final BigDecimal referentialMonthsDuration;
 
     public ReferentialAmounts(BigDecimal referentialCapitalAmount, BigDecimal referentialMonthsDuration) {
         this.referentialCapitalAmount = referentialCapitalAmount;

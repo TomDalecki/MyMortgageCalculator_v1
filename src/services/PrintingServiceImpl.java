@@ -9,8 +9,6 @@ import java.util.List;
 public class PrintingServiceImpl implements IPrintingService {
     @Override
     public void printCreditParameters(InputData inputData) {
-        StringBuilder msg = new StringBuilder(); // przez StringBuilder trzeba rozwijać
-
         System.out.print(NEW_LINE);
         System.out.println(CAPITAL + inputData.getCreditAmount() + CURRENCY);
         System.out.println(INTEREST + inputData.getPercentAmount() + PERCENT);
